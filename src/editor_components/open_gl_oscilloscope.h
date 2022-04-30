@@ -38,7 +38,7 @@ class OpenGLOscilloscope : public OpenGLComponent {
   private:
     void drawLines(OpenGLContext& open_gl_context);
 
-    ScopedPointer<OpenGLShaderProgram> shader_;
+    OpenGLShaderProgram* shader_;
     ScopedPointer<OpenGLShaderProgram::Attribute> position_;
 
     const float* output_memory_;

@@ -66,23 +66,22 @@ void OpenGLPeakMeter::init(OpenGLContext& open_gl_context) {
   open_gl_context.extensions.glBufferData(GL_ELEMENT_ARRAY_BUFFER, tri_size,
                                           position_triangles_, GL_STATIC_DRAW);
 
-  const char* vertex_shader = Shaders::getShader(Shaders::kGainMeterVertex);
-  const char* fragment_shader = Shaders::getShader(Shaders::kGainMeterFragment);
+  //const char* vertex_shader = Shaders::getShader(Shaders::kGainMeterVertex);
+  //const char* fragment_shader = Shaders::getShader(Shaders::kGainMeterFragment);
 
-  shader_ = new OpenGLShaderProgram(open_gl_context);
+  shader_ = OpenGLBackground::stat_shader;
 
-  if (shader_->addVertexShader(OpenGLHelpers::translateVertexShaderToV3(vertex_shader)) &&
-      shader_->addFragmentShader(OpenGLHelpers::translateFragmentShaderToV3(fragment_shader)) &&
-      shader_->link()) {
-    shader_->use();
-    position_ = new OpenGLShaderProgram::Attribute(*shader_, "position");
-  }
+  //if (shader_->addVertexShader(OpenGLHelpers::translateVertexShaderToV3(vertex_shader)) &&
+      //shader_->addFragmentShader(OpenGLHelpers::translateFragmentShaderToV3(fragment_shader)) &&
+      //shader_->link()) {
+    //shader_->use();
+  position_ = new OpenGLShaderProgram::Attribute(*shader_, "position");
+  //}
 }
 
 void OpenGLPeakMeter::updateVertices() {
   if (peak_output_ == nullptr)
     return;
-
   float val = peak_output_->buffer[left_ ? 0 : 1];
   float t = val / MAX_GAIN;
   float position = mopo::utils::interpolate(-1.0f, 1.0f, sqrtf(t));
@@ -95,6 +94,8 @@ void OpenGLPeakMeter::render(OpenGLContext& open_gl_context, bool animate) {
 
   if (!animate || peak_output_ == nullptr)
     return;
+  GLint programID;
+  OpenGLBackground::stat_shader->setUniform("rtype",2);
 
   updateVertices();
   setViewPort(open_gl_context);
@@ -102,7 +103,7 @@ void OpenGLPeakMeter::render(OpenGLContext& open_gl_context, bool animate) {
   glEnable(GL_BLEND);
   glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-  shader_->use();
+  //shader_->use();
 
   open_gl_context.extensions.glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_);
   GLsizeiptr vert_size = static_cast<GLsizeiptr>(static_cast<size_t>(8 * sizeof(float)));
@@ -124,7 +125,7 @@ void OpenGLPeakMeter::render(OpenGLContext& open_gl_context, bool animate) {
 }
 
 void OpenGLPeakMeter::destroy(OpenGLContext& open_gl_context) {
-  shader_ = nullptr;
+  //shader_ = nullptr;
   position_ = nullptr;
   open_gl_context.extensions.glDeleteBuffers(1, &vertex_buffer_);
   open_gl_context.extensions.glDeleteBuffers(1, &triangle_buffer_);

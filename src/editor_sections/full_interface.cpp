@@ -27,7 +27,7 @@
 #define TOP_HEIGHT 64
 
 #ifndef PAY_NAG
-  #define PAY_NAG 1
+  #define PAY_NAG 0
 #endif
 
 FullInterface::FullInterface(mopo::control_map controls, mopo::output_map modulation_sources,

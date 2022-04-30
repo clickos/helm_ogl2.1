@@ -58,7 +58,7 @@ void OpenGLBackground::init(OpenGLContext& open_gl_context) {
   const char* fragment_shader = Shaders::getShader(Shaders::kBackgroundImageFragment);
 
   image_shader_ = new OpenGLShaderProgram(open_gl_context);
-
+  stat_shader=image_shader_;
   if (image_shader_->addVertexShader(OpenGLHelpers::translateVertexShaderToV3(vertex_shader)) &&
       image_shader_->addFragmentShader(OpenGLHelpers::translateFragmentShaderToV3(fragment_shader)) &&
       image_shader_->link()) {
@@ -66,14 +66,15 @@ void OpenGLBackground::init(OpenGLContext& open_gl_context) {
     position_ = new OpenGLShaderProgram::Attribute(*image_shader_, "position");
     texture_coordinates_ = new OpenGLShaderProgram::Attribute(*image_shader_, "tex_coord_in");
     texture_uniform_ = new OpenGLShaderProgram::Uniform(*image_shader_, "image");
+
   }
 }
 
 void OpenGLBackground::destroy(OpenGLContext& open_gl_context) {
   if (background_.getWidth())
     background_.release();
-
-  image_shader_ = nullptr;
+  //stat_shader=nullptr;
+  image_shader_ = nullptr ;
   position_ = nullptr;
   texture_coordinates_ = nullptr;
   texture_uniform_ = nullptr;
@@ -89,6 +90,8 @@ void OpenGLBackground::bind(OpenGLContext& open_gl_context) {
 }
 
 void OpenGLBackground::enableAttributes(OpenGLContext& open_gl_context) {
+    image_shader_->setUniform("rtype",1); 
+
   if (position_ != nullptr) {
     open_gl_context.extensions.glVertexAttribPointer(position_->attributeID, 2, GL_FLOAT,
                                                      GL_FALSE, 4 * sizeof(float), 0);
@@ -112,6 +115,7 @@ void OpenGLBackground::disableAttributes(OpenGLContext& open_gl_context) {
 
 void OpenGLBackground::render(OpenGLContext& open_gl_context) {
   MOPO_ASSERT(glGetError() == GL_NO_ERROR);
+  //open_gl_context.extensions.glUniform1i(typeLocation, 0);
 
   if ((new_background_ || background_.getWidth() == 0) && background_image_.getWidth() > 0) {
     new_background_ = false;
@@ -155,3 +159,4 @@ void OpenGLBackground::updateBackgroundImage(Image background) {
   background_image_ = background;
   new_background_ = true;
 }
+OpenGLShaderProgram* OpenGLBackground::stat_shader=nullptr;

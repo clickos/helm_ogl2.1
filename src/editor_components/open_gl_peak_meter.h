@@ -40,7 +40,7 @@ class OpenGLPeakMeter : public OpenGLComponent {
 
     mopo::Output* peak_output_;
 
-    ScopedPointer<OpenGLShaderProgram> shader_;
+    OpenGLShaderProgram* shader_;
     ScopedPointer<OpenGLShaderProgram::Attribute> position_;
 
     float* position_vertices_;

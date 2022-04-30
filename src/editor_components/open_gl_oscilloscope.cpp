@@ -18,6 +18,7 @@
 
 #include "helm_common.h"
 #include "shaders.h"
+#include "synth_gui_interface.h"
 #include "utils.h"
 
 #define RESOLUTION 256
@@ -72,20 +73,22 @@ void OpenGLOscilloscope::init(OpenGLContext& open_gl_context) {
   open_gl_context.extensions.glBufferData(GL_ELEMENT_ARRAY_BUFFER, line_size,
                                           line_indices_, GL_STATIC_DRAW);
 
-  const char* vertex_shader = Shaders::getShader(Shaders::kOscilloscopeVertex);
-  const char* fragment_shader = Shaders::getShader(Shaders::kOscilloscopeFragment);
+  //const char* vertex_shader = Shaders::getShader(Shaders::kOscilloscopeVertex);
+  //const char* fragment_shader = Shaders::getShader(Shaders::kOscilloscopeFragment);
 
-  shader_ = new OpenGLShaderProgram(open_gl_context);
+  shader_ = OpenGLBackground::stat_shader;
 
-  if (shader_->addVertexShader(OpenGLHelpers::translateVertexShaderToV3(vertex_shader)) &&
-      shader_->addFragmentShader(OpenGLHelpers::translateFragmentShaderToV3(fragment_shader)) &&
-      shader_->link()) {
-    shader_->use();
+  //if (shader_->addVertexShader(OpenGLHelpers::translateVertexShaderToV3(vertex_shader)) &&
+      //shader_->addFragmentShader(OpenGLHelpers::translateFragmentShaderToV3(fragment_shader)) &&
+      //shader_->link()) {
+    //shader_->use();
     position_ = new OpenGLShaderProgram::Attribute(*shader_, "position");
-  }
+  //}
 }
 
 void OpenGLOscilloscope::drawLines(OpenGLContext& open_gl_context) {
+  OpenGLBackground::stat_shader->setUniform("rtype",4);
+
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
   glEnable(GL_LINE_SMOOTH);
   glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
@@ -112,7 +115,7 @@ void OpenGLOscilloscope::drawLines(OpenGLContext& open_gl_context) {
     open_gl_context.extensions.glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
-  shader_->use();
+  //shader_->use();
   open_gl_context.extensions.glBindBuffer(GL_ARRAY_BUFFER, line_buffer_);
   open_gl_context.extensions.glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, line_indices_buffer_);
 
@@ -135,7 +138,7 @@ void OpenGLOscilloscope::render(OpenGLContext& open_gl_context, bool animate) {
 }
 
 void OpenGLOscilloscope::destroy(OpenGLContext& open_gl_context) {
-  shader_ = nullptr;
+  //shader_ = nullptr;
   position_ = nullptr;
   open_gl_context.extensions.glDeleteBuffers(1, &line_buffer_);
   open_gl_context.extensions.glDeleteBuffers(1, &line_indices_buffer_);

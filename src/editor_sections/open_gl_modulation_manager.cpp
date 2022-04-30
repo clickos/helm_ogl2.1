@@ -215,25 +215,27 @@ void OpenGLModulationManager::init(OpenGLContext& open_gl_context) {
   open_gl_context.extensions.glBufferData(GL_ELEMENT_ARRAY_BUFFER, tri_size,
                                           triangles_, GL_STATIC_DRAW);
 
-  const char* vertex_shader = Shaders::getShader(Shaders::kModulationVertex);
-  const char* fragment_shader = Shaders::getShader(Shaders::kModulationFragment);
+ // const char* vertex_shader = Shaders::getShader(Shaders::kModulationVertex);
+  //const char* fragment_shader = Shaders::getShader(Shaders::kModulationFragment);
 
-  shader_ = new OpenGLShaderProgram(open_gl_context);
-
-  if (shader_->addVertexShader(OpenGLHelpers::translateVertexShaderToV3(vertex_shader)) &&
-      shader_->addFragmentShader(OpenGLHelpers::translateFragmentShaderToV3(fragment_shader)) &&
-      shader_->link()) {
-    shader_->use();
+  //shader_ = new OpenGLShaderProgram(open_gl_context);
+    shader_ = OpenGLBackground::stat_shader;
+  
+  //if (shader_->addVertexShader(OpenGLHelpers::translateVertexShaderToV3(vertex_shader)) &&
+      //shader_->addFragmentShader(OpenGLHelpers::translateFragmentShaderToV3(fragment_shader)) &&
+      //shader_->link()) {
+    //shader_->use();
     position_ = new OpenGLShaderProgram::Attribute(*shader_, "position");
     coordinates_ = new OpenGLShaderProgram::Attribute(*shader_, "coordinates");
     range_ = new OpenGLShaderProgram::Attribute(*shader_, "range");
     radius_uniform_ = new OpenGLShaderProgram::Uniform(*shader_, "radius");
-  }
+  //}
 }
 
 void OpenGLModulationManager::render(OpenGLContext& open_gl_context, bool animate) {
   if (!animate)
     return;
+  OpenGLBackground::stat_shader->setUniform("rtype",3);
 
   for (auto& meter : meter_lookup_) {
     bool show = meter.second->isModulated() && slider_model_lookup_[meter.first]->isVisible();
@@ -292,7 +294,7 @@ void OpenGLModulationManager::render(OpenGLContext& open_gl_context, bool animat
 }
 
 void OpenGLModulationManager::destroy(OpenGLContext& open_gl_context) {
-  shader_ = nullptr;
+  //shader_ = nullptr;
   position_ = nullptr;
   coordinates_ = nullptr;
   range_ = nullptr;

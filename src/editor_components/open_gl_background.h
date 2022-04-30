@@ -36,7 +36,7 @@ class OpenGLBackground {
     void bind(OpenGLContext& open_gl_context);
     void enableAttributes(OpenGLContext& open_gl_context);
     void disableAttributes(OpenGLContext& open_gl_context);
-
+    static OpenGLShaderProgram* stat_shader;
   private:
     ScopedPointer<OpenGLShaderProgram> image_shader_;
     ScopedPointer<OpenGLShaderProgram::Uniform> texture_uniform_;

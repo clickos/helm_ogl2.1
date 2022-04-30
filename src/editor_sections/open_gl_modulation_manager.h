@@ -82,7 +82,7 @@ class OpenGLModulationManager : public OpenGLComponent,
     std::map<std::string, ModulationHighlight*> overlay_lookup_;
     mopo::output_map modulation_sources_;
 
-    ScopedPointer<OpenGLShaderProgram> shader_;
+    OpenGLShaderProgram* shader_;
     ScopedPointer<OpenGLShaderProgram::Attribute> position_;
     ScopedPointer<OpenGLShaderProgram::Attribute> coordinates_;
     ScopedPointer<OpenGLShaderProgram::Attribute> range_;
